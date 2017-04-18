@@ -1,13 +1,12 @@
 from PIL import Image, ImageDraw, ImageGrab
+from appscript import app, mactypes
+import ConfigParser
 import math
 import random
 
-# image.putpixel((256,256),(255,255,255))
-
-# For each branch - half the branch, rotate
-# Create a trunk
-# Recursively call drawBranch on endpoints until the branch length
-# is smaller than some number
+config = ConfigParser.ConfigParser()
+config.read("setup.cfg")
+path = config.get("picture_path", "picture_output")
 
 def randomColor():
     colors = [(0, 255, 26),
@@ -46,6 +45,8 @@ def newRandomTree():
 
     drawBranch(randomColor(), image, draw, startX, startY, length, hFactor,
     3 * math.pi / 2, delta)
-    image.show()
+    return image
 
-newRandomTree()
+image = newRandomTree()
+image.save(path, "PNG")
+app('Finder').desktop_picture.set(mactypes.File(path))
